@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings | ExpensePilot</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['"Plus Jakarta Sans"', 'sans-serif'] },
+                    colors: {
+                        brand: {
+                            50: '#ecfdf5', 100: '#d1fae5', 200: '#a7f3d0',
+                            500: '#10b981', 600: '#059669', 900: '#064e3b', 950: '#022c22',
+                        },
+                        surface: '#ffffff',
+                        background: '#f4f4f5',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+
+<body class="bg-background font-sans text-zinc-800 antialiased flex h-screen overflow-hidden">
+
+    <!-- Sidebar -->
+    <aside id="sidebar" class="bg-surface w-64 border-r border-zinc-200 flex flex-col justify-between absolute lg:relative z-40 h-full transition-transform transform -translate-x-full lg:translate-x-0 shadow-2xl lg:shadow-none">
+        <div>
+            <div class="h-20 flex items-center px-8 border-b border-zinc-100">
+                <div class="w-8 h-8 bg-brand-600 rounded-lg flex items-center justify-center text-white mr-3 shadow-md shadow-brand-500/20">
+                    <i class="fas fa-wallet text-sm"></i>
+                </div>
+                <span class="text-xl font-bold tracking-tight text-zinc-900">ExpensePilot</span>
+            </div>
+
+            <nav class="p-4 space-y-1 mt-4">
+                <a href="dashboard.html" class="flex items-center gap-3 px-4 py-3 text-zinc-500 hover:bg-zinc-50 hover:text-zinc-900 rounded-xl font-medium transition-all group">
+                    <i class="fas fa-border-all w-5 group-hover:text-zinc-900 transition-colors"></i> Dashboard
+                </a>
+                <a href="expenses.html" class="flex items-center gap-3 px-4 py-3 text-zinc-500 hover:bg-zinc-50 hover:text-zinc-900 rounded-xl font-medium transition-all group">
+                    <i class="fas fa-receipt w-5 group-hover:text-zinc-900 transition-colors"></i> Expenses
+                </a>
+                <a href="income.html" class="flex items-center gap-3 px-4 py-3 text-zinc-500 hover:bg-zinc-50 hover:text-zinc-900 rounded-xl font-medium transition-all group">
+                    <i class="fas fa-arrow-trend-up w-5 group-hover:text-zinc-900 transition-colors"></i> Income
+                </a>
+                <a href="budget.html" class="flex items-center gap-3 px-4 py-3 text-zinc-500 hover:bg-zinc-50 hover:text-zinc-900 rounded-xl font-medium transition-all group">
+                    <i class="fas fa-bullseye w-5 group-hover:text-zinc-900 transition-colors"></i> Budgets
+                </a>
+            </nav>
+        </div>
+
+        <div class="p-4 border-t border-zinc-100">
+            <!-- Active Tab -->
+            <a href="settings.html" class="flex items-center gap-3 px-4 py-3 bg-brand-50 text-brand-600 rounded-xl font-semibold transition-all mb-2 border border-brand-100/50 shadow-sm">
+                <i class="fas fa-gear w-5"></i> Settings
+            </a>
+            <button id="logoutBtn" class="w-full flex items-center gap-3 px-4 py-3 text-red-500 hover:bg-red-50 rounded-xl font-medium transition-all">
+                <i class="fas fa-sign-out-alt w-5"></i> Log Out
+            </button>
+        </div>
+    </aside>
+
+    <div id="sidebarOverlay" class="fixed inset-0 bg-zinc-900/60 z-30 hidden lg:hidden backdrop-blur-sm transition-opacity"></div>
+
+    <!-- Main Content -->
+    <main class="flex-1 flex flex-col h-full overflow-hidden">
+        
+        <header class="h-20 bg-surface/80 backdrop-blur-md sticky top-0 z-20 flex items-center justify-between px-6 lg:px-10 shrink-0 border-b border-zinc-200/50">
+            <div class="flex items-center gap-4">
+                <button id="mobileMenuBtn" class="lg:hidden text-zinc-500 hover:text-zinc-900 transition text-xl">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <h1 class="text-xl font-bold text-zinc-900">Settings</h1>
+            </div>
+            
+            <div class="flex items-center gap-4">
+                <div class="w-10 h-10 rounded-full bg-brand-100 border border-brand-200 overflow-hidden hidden sm:block">
+                    <img id="headerAvatar" src="https://ui-avatars.com/api/?name=User&background=10b981&color=fff" alt="Avatar" class="w-full h-full object-cover">
+                </div>
+            </div>
+        </header>
+
+        <div class="flex-1 overflow-y-auto p-6 lg:p-10 max-w-4xl mx-auto w-full space-y-8 pb-20">
+            
+            <!-- Profile Settings Card -->
+            <div class="bg-surface rounded-3xl border border-zinc-200 shadow-xl shadow-zinc-200/30 overflow-hidden">
+                <div class="p-6 border-b border-zinc-100 bg-zinc-50/50">
+                    <h2 class="font-bold text-lg text-zinc-900">Profile Details</h2>
+                    <p class="text-sm text-zinc-500 font-medium">Update your personal information and profile picture.</p>
+                </div>
+                
+                <div class="p-6 md:p-8">
+                    <div class="flex flex-col md:flex-row gap-8 items-start">
+                        
+                        <!-- Avatar Upload Section -->
+                        <div class="flex flex-col items-center gap-3">
+                            <div class="relative group w-28 h-28 rounded-full border-4 border-white shadow-lg overflow-hidden bg-brand-50">
+                                <img id="profileAvatar" src="https://ui-avatars.com/api/?name=User&background=10b981&color=fff" alt="Profile Picture" class="w-full h-full object-cover transition duration-300">
+                                <label for="avatarUpload" class="absolute inset-0 bg-zinc-900/60 flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
+                                    <i class="fas fa-camera text-white text-xl mb-1"></i>
+                                    <span class="text-white text-xs font-semibold">Upload</span>
+                                </label>
+                                <input type="file" id="avatarUpload" accept="image/*" class="hidden">
+                            </div>
+                            <p id="uploadStatus" class="text-xs font-bold text-brand-600 hidden">Uploading...</p>
+                        </div>
+
+                        <!-- Profile Form -->
+                        <form id="profileForm" class="flex-1 w-full space-y-5">
+                            <div>
+                                <label class="block text-sm font-semibold text-zinc-700 mb-1.5">Full Name</label>
+                                <input type="text" id="fullName" required class="w-full bg-zinc-50 border border-zinc-200 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 text-zinc-900 transition font-medium">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-zinc-700 mb-1.5">Email Address</label>
+                                <input type="email" id="emailAddress" disabled class="w-full bg-zinc-100 border border-zinc-200 rounded-xl px-4 py-3 text-zinc-500 font-medium cursor-not-allowed" title="Email cannot be changed here.">
+                                <p class="text-xs text-zinc-400 mt-1.5 font-medium"><i class="fas fa-info-circle mr-1"></i> Email address is tied to your authentication and cannot be changed.</p>
+                            </div>
+                            <div class="pt-2">
+                                <button type="submit" id="saveProfileBtn" class="bg-zinc-900 text-white font-bold px-6 py-3 rounded-xl hover:bg-zinc-800 transition shadow-md shadow-zinc-900/20 flex items-center gap-2">
+                                    <span>Save Profile</span>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Preferences Card -->
+            <div class="bg-surface rounded-3xl border border-zinc-200 shadow-xl shadow-zinc-200/30 overflow-hidden">
+                <div class="p-6 border-b border-zinc-100 bg-zinc-50/50">
+                    <h2 class="font-bold text-lg text-zinc-900">App Preferences</h2>
+                    <p class="text-sm text-zinc-500 font-medium">Customize your ExpensePilot experience.</p>
+                </div>
+                <div class="p-6 md:p-8">
+                    <form id="preferencesForm" class="space-y-5">
+                        <div class="max-w-md">
+                            <label class="block text-sm font-semibold text-zinc-700 mb-1.5">Default Currency</label>
+                            <select id="currencySelect" class="w-full bg-zinc-50 border border-zinc-200 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 text-zinc-900 transition cursor-pointer font-medium">
+                                <option value="NGN">Nigerian Naira (₦)</option>
+                                <option value="USD">US Dollar ($)</option>
+                                <option value="EUR">Euro (€)</option>
+                                <option value="GBP">British Pound (£)</option>
+                            </select>
+                        </div>
+                        <div class="pt-2">
+                            <button type="submit" id="savePrefsBtn" class="bg-brand-600 text-white font-bold px-6 py-3 rounded-xl hover:bg-brand-700 transition shadow-md shadow-brand-600/20 flex items-center gap-2">
+                                <span>Save Preferences</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Security Card -->
+            <div class="bg-surface rounded-3xl border border-red-100 shadow-xl shadow-red-200/20 overflow-hidden">
+                <div class="p-6 border-b border-red-50 bg-red-50/30">
+                    <h2 class="font-bold text-lg text-red-600">Security</h2>
+                    <p class="text-sm text-red-400 font-medium">Manage your account security.</p>
+                </div>
+                <div class="p-6 md:p-8 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                    <div>
+                        <h3 class="font-bold text-zinc-900">Password Reset</h3>
+                        <p class="text-sm text-zinc-500 font-medium mt-1">Receive an email with a secure link to reset your password.</p>
+                    </div>
+                    <button id="resetPasswordBtn" class="bg-white border-2 border-zinc-200 text-zinc-700 font-bold px-6 py-2.5 rounded-xl hover:border-red-500 hover:text-red-500 transition shrink-0">
+                        Send Reset Link
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const sidebar = document.getElementById('sidebar');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
+
+        function toggleSidebar() {
+            sidebar.classList.toggle('-translate-x-full');
+            sidebarOverlay.classList.toggle('hidden');
+        }
+
+        mobileMenuBtn.addEventListener('click', toggleSidebar);
+        sidebarOverlay.addEventListener('click', toggleSidebar);
+    </script>
+
+    <script type="module" src="./js/settings.js"></script>
+
+</body>
+</html>
