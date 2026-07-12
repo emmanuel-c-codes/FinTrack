@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Budgets | ExpensePilot</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['"Plus Jakarta Sans"', 'sans-serif'] },
+                    colors: {
+                        brand: {
+                            50: '#ecfdf5', 100: '#d1fae5', 200: '#a7f3d0',
+                            500: '#10b981', 600: '#059669', 900: '#064e3b', 950: '#022c22',
+                        },
+                        surface: '#ffffff',
+                        background: '#f4f4f5',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+
+<body class="bg-background font-sans text-zinc-800 antialiased flex h-screen overflow-hidden">
+
+    <aside id="sidebar" class="bg-surface w-64 border-r border-zinc-200 flex flex-col justify-between absolute lg:relative z-40 h-full transition-transform transform -translate-x-full lg:translate-x-0 shadow-2xl lg:shadow-none">
+        <div>
+            <div class="h-20 flex items-center px-8 border-b border-zinc-100">
+                <div class="w-8 h-8 bg-brand-600 rounded-lg flex items-center justify-center text-white mr-3 shadow-md shadow-brand-500/20">
+                    <i class="fas fa-wallet text-sm"></i>
+                </div>
+                <span class="text-xl font-bold tracking-tight text-zinc-900">ExpensePilot</span>
+            </div>
+
+            <nav class="p-4 space-y-1 mt-4">
+                <a href="dashboard.html" class="flex items-center gap-3 px-4 py-3 text-zinc-500 hover:bg-zinc-50 hover:text-zinc-900 rounded-xl font-medium transition-all group">
+                    <i class="fas fa-border-all w-5 group-hover:text-zinc-900 transition-colors"></i> Dashboard
+                </a>
+                <a href="expenses.html" class="flex items-center gap-3 px-4 py-3 text-zinc-500 hover:bg-zinc-50 hover:text-zinc-900 rounded-xl font-medium transition-all group">
+                    <i class="fas fa-receipt w-5 group-hover:text-zinc-900 transition-colors"></i> Expenses
+                </a>
+                <a href="income.html" class="flex items-center gap-3 px-4 py-3 text-zinc-500 hover:bg-zinc-50 hover:text-zinc-900 rounded-xl font-medium transition-all group">
+                    <i class="fas fa-arrow-trend-up w-5 group-hover:text-zinc-900 transition-colors"></i> Income
+                </a>
+                <a href="budget.html" class="flex items-center gap-3 px-4 py-3 bg-brand-50 text-brand-600 rounded-xl font-semibold transition-all border border-brand-100/50 shadow-sm">
+                    <i class="fas fa-bullseye w-5"></i> Budgets
+                </a>
+            </nav>
+        </div>
+
+        <div class="p-4 border-t border-zinc-100">
+            <a href="settings.html" class="flex items-center gap-3 px-4 py-3 text-zinc-500 hover:bg-zinc-50 hover:text-zinc-900 rounded-xl font-medium transition-all mb-2">
+                <i class="fas fa-gear w-5"></i> Settings
+            </a>
+            <button id="logoutBtn" class="w-full flex items-center gap-3 px-4 py-3 text-red-500 hover:bg-red-50 rounded-xl font-medium transition-all">
+                <i class="fas fa-sign-out-alt w-5"></i> Log Out
+            </button>
+        </div>
+    </aside>
+
+    <div id="sidebarOverlay" class="fixed inset-0 bg-zinc-900/60 z-30 hidden lg:hidden backdrop-blur-sm transition-opacity"></div>
+
+    <main class="flex-1 flex flex-col h-full overflow-hidden">
+        
+        <header class="h-20 bg-surface/80 backdrop-blur-md sticky top-0 z-20 flex items-center justify-between px-6 lg:px-10 shrink-0 border-b border-zinc-200/50">
+            <div class="flex items-center gap-4">
+                <button id="mobileMenuBtn" class="lg:hidden text-zinc-500 hover:text-zinc-900 transition text-xl">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <h1 class="text-xl font-bold text-zinc-900">Monthly Budgets</h1>
+            </div>
+            
+            <div class="flex items-center gap-4">
+                <button onclick="toggleBudgetModal()" class="bg-zinc-900 hover:bg-zinc-800 text-white px-5 py-2.5 rounded-xl font-medium transition-all shadow-sm shadow-zinc-900/20 flex items-center gap-2">
+                    <i class="fas fa-plus"></i> <span class="hidden sm:inline">New Budget</span>
+                </button>
+                <div class="w-10 h-10 rounded-full bg-brand-100 border border-brand-200 overflow-hidden hidden sm:block">
+                    <img id="userAvatar" src="https://ui-avatars.com/api/?name=User&background=10b981&color=fff" alt="Avatar" class="w-full h-full object-cover">
+                </div>
+            </div>
+        </header>
+
+        <div class="flex-1 overflow-y-auto p-6 lg:p-10 max-w-7xl mx-auto w-full">
+            
+            <div id="budgetContainer" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 lg:gap-8">
+                <div class="col-span-full flex flex-col items-center justify-center py-20 text-zinc-400">
+                    <i class="fas fa-spinner fa-spin text-3xl mb-4"></i>
+                    <p class="font-medium">Syncing your budgets...</p>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <div id="budgetModal" class="fixed inset-0 bg-zinc-900/60 z-50 hidden flex items-center justify-center p-4 backdrop-blur-sm transition-opacity">
+        <div class="bg-surface w-full max-w-md rounded-2xl shadow-2xl border border-zinc-200 overflow-hidden transform transition-all">
+            
+            <div class="p-6 border-b border-zinc-100 flex justify-between items-center bg-zinc-50/50">
+                <h3 class="font-bold text-lg text-zinc-900">Set Category Budget</h3>
+                <button onclick="toggleBudgetModal()" class="text-zinc-400 hover:text-zinc-600 transition">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            
+            <form id="budgetForm" class="p-6 space-y-5">
+                <div>
+                    <label class="block text-sm font-semibold text-zinc-700 mb-1.5">Category</label>
+                    <select id="budgetCategory" required class="w-full bg-zinc-50 border border-zinc-200 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 text-zinc-900 transition cursor-pointer font-medium">
+                        <option value="Food & Dining">Food & Dining</option>
+                        <option value="Transportation">Transportation</option>
+                        <option value="Technology & Software">Technology & Software</option>
+                        <option value="Utilities">Utilities</option>
+                        <option value="Rent & Housing">Rent & Housing</option>
+                        <option value="Shopping">Shopping</option>
+                        <option value="Entertainment">Entertainment</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-semibold text-zinc-700 mb-1.5">Monthly Limit (₦)</label>
+                    <input type="number" id="budgetLimit" required min="1" step="any" class="w-full bg-zinc-50 border border-zinc-200 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 text-zinc-900 transition font-medium" placeholder="50000">
+                </div>
+
+                <div class="pt-2 flex gap-3">
+                    <button type="button" onclick="toggleBudgetModal()" class="flex-1 border border-zinc-200 text-zinc-600 font-bold py-3 rounded-xl hover:bg-zinc-50 transition shadow-sm">Cancel</button>
+                    <button type="submit" id="saveBudgetBtn" class="flex-1 bg-zinc-900 text-white font-bold py-3 rounded-xl hover:bg-zinc-800 transition shadow-md shadow-zinc-900/20">Save Budget</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const sidebar = document.getElementById('sidebar');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
+        const budgetModal = document.getElementById('budgetModal');
+
+        function toggleSidebar() {
+            sidebar.classList.toggle('-translate-x-full');
+            sidebarOverlay.classList.toggle('hidden');
+        }
+
+        window.toggleBudgetModal = function() {
+            budgetModal.classList.toggle('hidden');
+        }
+
+        mobileMenuBtn.addEventListener('click', toggleSidebar);
+        sidebarOverlay.addEventListener('click', toggleSidebar);
+    </script>
+
+    <script type="module" src="./js/budget.js"></script>
+
+</body>
+</html>

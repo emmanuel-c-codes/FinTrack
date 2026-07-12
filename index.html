@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expense Pilot | Master Your Money</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#eff6ff',
+                            100: '#dbeafe',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            900: '#1e3a8a',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans antialiased flex flex-col min-h-screen">
+
+    <nav class="bg-white border-b border-slate-200 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex-shrink-0 flex items-center gap-2 cursor-pointer">
+                    <div class="w-8 h-8 bg-brand-600 rounded-lg flex items-center justify-center text-white font-bold text-xl">
+                        EP
+                    </div>
+                    <span class="font-bold text-xl text-slate-900 tracking-tight">Expense Pilot</span>
+                </div>
+                
+                <div class="hidden md:flex items-center space-x-4">
+                    <a href="login.html" class="text-slate-600 hover:text-brand-600 font-medium transition">Log In</a>
+                    <a href="signup.html" class="bg-brand-600 text-white px-5 py-2 rounded-lg font-medium hover:bg-brand-700 transition shadow-sm">Get Started</a>
+                </div>
+
+                <div class="md:hidden flex items-center">
+                    <button class="text-slate-500 hover:text-slate-900 focus:outline-none">
+                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="flex-grow">
+        <section class="relative pt-20 pb-24 overflow-hidden">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+                <h1 class="text-5xl md:text-6xl font-extrabold text-slate-900 tracking-tight mb-6">
+                    Stop wondering where <br class="hidden md:block" /> 
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-600 to-blue-400">your money goes.</span>
+                </h1>
+                <p class="mt-4 text-xl text-slate-600 max-w-2xl mx-auto mb-10">
+                    Expense Pilot is the smart, effortless way to track expenses, visualize spending charts, and hit your financial goals.
+                </p>
+                <div class="flex flex-col sm:flex-row justify-center gap-4">
+                    <a href="signup.html" class="bg-slate-900 text-white px-8 py-4 rounded-xl text-lg font-semibold hover:bg-slate-800 transition shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
+                        Start Tracking for Free
+                    </a>
+                    <a href="#features" class="bg-white text-slate-700 border border-slate-200 px-8 py-4 rounded-xl text-lg font-semibold hover:bg-slate-50 transition shadow-sm">
+                        See How it Works
+                    </a>
+                </div>
+            </div>
+            
+            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-brand-50 rounded-full blur-3xl opacity-50 -z-10 pointer-events-none"></div>
+        </section>
+
+        <section id="features" class="py-20 bg-white border-t border-slate-100">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-16">
+                    <h2 class="text-3xl font-bold text-slate-900">Everything you need to take control</h2>
+                    <p class="mt-4 text-slate-500">Built perfectly for tracking day-to-day spending and long-term targets.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <div class="p-6 bg-slate-50 rounded-2xl border border-slate-100">
+                        <div class="w-12 h-12 bg-blue-100 text-brand-600 rounded-xl flex items-center justify-center mb-6">
+                            <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" /></svg>
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-900 mb-2">Record Expenses Fast</h3>
+                        <p class="text-slate-600 leading-relaxed">Log your daily transactions in seconds. Categorize them instantly and keep your ledger accurate without the hassle.</p>
+                    </div>
+
+                    <div class="p-6 bg-slate-50 rounded-2xl border border-slate-100">
+                        <div class="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-xl flex items-center justify-center mb-6">
+                            <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z" /></svg>
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-900 mb-2">Visual Spending Charts</h3>
+                        <p class="text-slate-600 leading-relaxed">Instantly see where your money goes with beautiful, interactive doughnut and bar charts.</p>
+                    </div>
+
+                    <div class="p-6 bg-slate-50 rounded-2xl border border-slate-100">
+                        <div class="w-12 h-12 bg-amber-100 text-amber-600 rounded-xl flex items-center justify-center mb-6">
+                            <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-900 mb-2">Automated Reports</h3>
+                        <p class="text-slate-600 leading-relaxed">Generate monthly summaries that break down your cash flow, helping you adjust your habits over time.</p>
+                    </div>
+
+                    <div class="p-6 bg-slate-50 rounded-2xl border border-slate-100">
+                        <div class="w-12 h-12 bg-red-100 text-red-600 rounded-xl flex items-center justify-center mb-6">
+                            <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" /></svg>
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-900 mb-2">Budget Reminders</h3>
+                        <p class="text-slate-600 leading-relaxed">Set dynamic limits for specific categories. We will alert you visually before you overspend.</p>
+                    </div>
+
+                    <div class="p-6 bg-slate-50 rounded-2xl border border-slate-100 lg:col-span-2">
+                        <div class="w-12 h-12 bg-purple-100 text-purple-600 rounded-xl flex items-center justify-center mb-6">
+                            <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-900 mb-2">Track Savings Goals</h3>
+                        <p class="text-slate-600 leading-relaxed max-w-xl">Whether it's a new laptop or an emergency fund, create dedicated savings pots and watch your progress bars fill up as you securely manage your finances.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="bg-slate-900 py-20 text-center">
+            <div class="max-w-4xl mx-auto px-4">
+                <h2 class="text-3xl font-bold text-white mb-6">Ready to secure your financial future?</h2>
+                <p class="text-slate-400 mb-8 text-lg">Join Expense Pilot today and get a clear picture of your finances.</p>
+                <a href="signup.html" class="inline-block bg-brand-600 text-white px-8 py-4 rounded-xl text-lg font-semibold hover:bg-brand-500 transition shadow-lg">
+                    Create Your Free Account
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-white border-t border-slate-200 py-8">
+        <div class="max-w-7xl mx-auto px-4 text-center text-slate-500 text-sm">
+            <p>&copy; 2026 Expense Pilot. Built for the modern web.</p>
+        </div>
+    </footer>
+
+</body>
+</html>
