@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | ExpensePilot</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"/>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['"Plus Jakarta Sans"', 'sans-serif'] },
+                    colors: {
+                        brand: {
+                            50: '#ecfdf5', 100: '#d1fae5', 400: '#34d399', 500: '#10b981',
+                            600: '#059669', 800: '#065f46', 900: '#064e3b', 950: '#022c22',
+                        },
+                        surface: '#ffffff',
+                        background: '#f8fafc',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+
+<body class="bg-background font-sans text-zinc-800 antialiased flex h-screen overflow-hidden">
+
+    <aside id="sidebar" class="bg-surface w-72 border-r border-zinc-100 flex flex-col justify-between absolute lg:relative z-40 h-full transition-transform transform -translate-x-full lg:translate-x-0 shadow-2xl lg:shadow-none">
+        <div>
+            <div class="h-24 flex items-center px-8">
+                <div class="w-10 h-10 bg-gradient-to-br from-brand-400 to-brand-600 rounded-xl flex items-center justify-center text-white mr-4 shadow-lg shadow-brand-500/30">
+                    <i class="fas fa-wallet text-lg"></i>
+                </div>
+                <span class="text-2xl font-extrabold tracking-tight text-zinc-900">ExpensePilot</span>
+            </div>
+
+            <div class="px-6 mb-4">
+                <div class="bg-zinc-50 border border-zinc-100/80 rounded-2xl p-3 flex items-center gap-4 group transition-colors">
+                    <div class="relative w-12 h-12 rounded-full overflow-hidden shrink-0 bg-brand-100 border-2 border-white shadow-sm cursor-pointer">
+                        <label for="avatarUpload" class="w-full h-full block cursor-pointer">
+                            <img id="userAvatar" src="https://ui-avatars.com/api/?name=User&background=10b981&color=fff" alt="Avatar" class="w-full h-full object-cover transition duration-300">
+                            <div class="absolute inset-0 bg-zinc-900/60 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                                <i class="fas fa-camera text-white text-xs"></i>
+                            </div>
+                        </label>
+                        <input type="file" id="avatarUpload" accept="image/*" class="hidden">
+                    </div>
+                    <div class="overflow-hidden">
+                        <p class="text-sm font-bold text-zinc-900 truncate" id="sidebarUserName">Loading...</p>
+                        <p class="text-xs font-semibold text-brand-600 bg-brand-50 inline-block px-2 py-0.5 rounded-md mt-0.5">Pro Member</p>
+                    </div>
+                </div>
+            </div>
+
+            <nav class="px-4 space-y-2">
+                <a href="dashboard.html" class="flex items-center gap-4 px-4 py-3.5 bg-brand-50 text-brand-600 rounded-2xl font-bold transition-all border border-brand-100/50 shadow-sm">
+                    <i class="fas fa-border-all w-5 text-lg"></i> Dashboard
+                </a>
+                <a href="expenses.html" class="flex items-center gap-4 px-4 py-3.5 text-zinc-400 hover:bg-zinc-50 hover:text-zinc-900 rounded-2xl font-semibold transition-all group">
+                    <i class="fas fa-receipt w-5 text-lg group-hover:text-zinc-900 transition-colors"></i> Expenses
+                </a>
+                <a href="income.html" class="flex items-center gap-4 px-4 py-3.5 text-zinc-400 hover:bg-zinc-50 hover:text-zinc-900 rounded-2xl font-semibold transition-all group">
+                    <i class="fas fa-arrow-trend-up w-5 text-lg group-hover:text-zinc-900 transition-colors"></i> Income
+                </a>
+                <a href="budget.html" class="flex items-center gap-4 px-4 py-3.5 text-zinc-400 hover:bg-zinc-50 hover:text-zinc-900 rounded-2xl font-semibold transition-all group">
+                    <i class="fas fa-bullseye w-5 text-lg group-hover:text-zinc-900 transition-colors"></i> Budgets
+                </a>
+            </nav>
+        </div>
+
+        <div class="p-4 mb-4">
+            <div class="bg-zinc-50 rounded-3xl p-4 border border-zinc-100">
+                <a href="settings.html" class="flex items-center gap-4 px-4 py-3 text-zinc-500 hover:text-zinc-900 rounded-xl font-semibold transition-all">
+                    <i class="fas fa-gear w-5"></i> Settings
+                </a>
+                <button id="logoutBtn" class="w-full flex items-center gap-4 px-4 py-3 text-red-500 hover:bg-red-50 rounded-xl font-semibold transition-all mt-1">
+                    <i class="fas fa-sign-out-alt w-5"></i> Log Out
+                </button>
+            </div>
+        </div>
+    </aside>
+
+    <div id="sidebarOverlay" class="fixed inset-0 bg-zinc-900/60 z-30 hidden lg:hidden backdrop-blur-sm transition-opacity"></div>
+
+    <main class="flex-1 flex flex-col h-full overflow-y-auto">
+        
+        <header class="h-24 bg-background/80 backdrop-blur-xl sticky top-0 z-20 flex items-center justify-between px-6 lg:px-10 shrink-0">
+            <div class="flex items-center gap-4">
+                <button id="mobileMenuBtn" class="lg:hidden text-zinc-500 hover:text-zinc-900 transition text-2xl">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div>
+                    <h1 class="text-2xl font-extrabold text-zinc-900 tracking-tight" id="welcomeMessage">Welcome, <span class="font-extrabold text-brand-600">User</span></h1>
+                    <p class="text-sm text-zinc-500 font-medium mt-0.5">Here's your financial summary.</p>
+                </div>
+            </div>
+            
+            <div class="flex items-center gap-5">
+                <button class="relative w-12 h-12 rounded-full bg-white border border-zinc-200 text-zinc-400 flex items-center justify-center hover:bg-zinc-50 hover:text-brand-600 transition shadow-sm">
+                    <i class="fas fa-bell text-lg"></i>
+                    <span class="absolute top-3 right-3 w-2.5 h-2.5 bg-red-500 border-2 border-white rounded-full"></span>
+                </button>
+            </div>
+        </header>
+
+        <div class="p-6 lg:p-10 lg:pt-4 max-w-7xl mx-auto w-full space-y-8">
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
+                
+                <div class="bg-gradient-to-br from-brand-900 via-brand-800 to-brand-600 rounded-3xl p-8 shadow-2xl shadow-brand-900/20 relative overflow-hidden group hover:-translate-y-1 transition-all duration-300">
+                    <div class="absolute -right-10 -top-10 w-48 h-48 bg-white/10 rounded-full blur-3xl group-hover:bg-white/20 transition duration-700"></div>
+                    <div class="absolute -left-10 -bottom-10 w-32 h-32 bg-brand-400/20 rounded-full blur-2xl"></div>
+                    
+                    <div class="flex justify-between items-start mb-6 relative z-10">
+                        <div class="w-14 h-14 bg-white/10 rounded-2xl flex items-center justify-center text-white backdrop-blur-md border border-white/10 shadow-inner">
+                            <i class="fas fa-wallet text-2xl"></i>
+                        </div>
+                        <span class="bg-white/10 backdrop-blur-md text-white border border-white/10 text-xs font-bold px-3 py-1.5 rounded-full uppercase tracking-wider">NET WORTH</span>
+                    </div>
+                    <p class="text-brand-100/80 text-sm font-semibold mb-2 relative z-10 tracking-wide uppercase">TOTAL BALANCE</p>
+                    <h2 class="text-4xl font-extrabold text-white tracking-tight relative z-10" id="totalBalance">₦0.00</h2>
+                </div>
+
+                <div class="bg-white rounded-3xl p-8 border border-zinc-100 shadow-xl shadow-zinc-200/40 hover:-translate-y-1 transition-all duration-300">
+                    <div class="flex justify-between items-start mb-6">
+                        <div class="w-14 h-14 bg-emerald-50 rounded-2xl flex items-center justify-center text-emerald-500 border border-emerald-100">
+                            <i class="fas fa-arrow-trend-up text-2xl"></i>
+                        </div>
+                    </div>
+                    <p class="text-zinc-400 text-sm font-semibold mb-2 tracking-wide uppercase">TOTAL INCOME</p>
+                    <h2 class="text-3xl font-extrabold text-zinc-900 tracking-tight" id="totalIncome">₦0.00</h2>
+                </div>
+
+                <div class="bg-white rounded-3xl p-8 border border-zinc-100 shadow-xl shadow-zinc-200/40 hover:-translate-y-1 transition-all duration-300">
+                    <div class="flex justify-between items-start mb-6">
+                        <div class="w-14 h-14 bg-red-50 rounded-2xl flex items-center justify-center text-red-500 border border-red-100">
+                            <i class="fas fa-receipt text-2xl"></i>
+                        </div>
+                    </div>
+                    <p class="text-zinc-400 text-sm font-semibold mb-2 tracking-wide uppercase">TOTAL EXPENSES</p>
+                    <h2 class="text-3xl font-extrabold text-zinc-900 tracking-tight" id="totalExpenses">₦0.00</h2>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div class="bg-surface rounded-2xl border border-zinc-200 shadow-sm p-6 lg:col-span-2">
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="font-bold text-zinc-900 text-lg">Expense Analytics</h3>
+                        <select class="bg-zinc-50 border border-zinc-200 text-sm rounded-lg px-3 py-1.5 outline-none focus:border-brand-500 text-zinc-600 font-medium">
+                            <option>This Month</option>
+                            <option>Last Month</option>
+                            <option>All Time</option>
+                        </select>
+                    </div>
+                    <div class="relative h-64 w-full flex items-center justify-center">
+                        <canvas id="expenseChart"></canvas>
+                        <p class="text-zinc-400 font-medium text-sm hidden" id="chartPlaceholder">Not enough data for chart</p>
+                    </div>
+                </div>
+
+                <div class="bg-surface rounded-2xl border border-zinc-200 shadow-sm flex flex-col h-full">
+                    <div class="p-6 border-b border-zinc-100 flex items-center justify-between">
+                        <h3 class="font-bold text-zinc-900 text-lg">Recent</h3>
+                        <a href="expenses.html" class="text-sm font-semibold text-brand-600 hover:text-brand-700">View All</a>
+                    </div>
+                    <div class="p-4 flex-1 overflow-y-auto space-y-2" id="recentTransactions">
+                        <div class="flex items-center justify-center h-full text-zinc-400 text-sm font-medium">
+                            <i class="fas fa-spinner fa-spin mr-2"></i> Syncing data...
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </main>
+
+    <script>
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const sidebar = document.getElementById('sidebar');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
+
+        function toggleSidebar() {
+            sidebar.classList.toggle('-translate-x-full');
+            sidebarOverlay.classList.toggle('hidden');
+        }
+        mobileMenuBtn.addEventListener('click', toggleSidebar);
+        sidebarOverlay.addEventListener('click', toggleSidebar);
+    </script>
+
+    <script type="module" src="./js/i.js"></script>
+</body>
+</html>
