@@ -24,7 +24,7 @@
                             600: '#059669', 800: '#065f46', 900: '#064e3b', 950: '#022c22',
                         },
                         surface: '#ffffff',
-                        background: '#f8fafc', // Slightly cooler, softer background
+                        background: '#f8fafc',
                     }
                 }
             }
@@ -43,7 +43,25 @@
                 <span class="text-2xl font-extrabold tracking-tight text-zinc-900">ExpensePilot</span>
             </div>
 
-            <nav class="px-4 space-y-2 mt-2">
+            <div class="px-6 mb-4">
+                <div class="bg-zinc-50 border border-zinc-100/80 rounded-2xl p-3 flex items-center gap-4 group transition-colors">
+                    <div class="relative w-12 h-12 rounded-full overflow-hidden shrink-0 bg-brand-100 border-2 border-white shadow-sm cursor-pointer">
+                        <label for="avatarUpload" class="w-full h-full block cursor-pointer">
+                            <img id="userAvatar" src="https://ui-avatars.com/api/?name=User&background=10b981&color=fff" alt="Avatar" class="w-full h-full object-cover transition duration-300">
+                            <div class="absolute inset-0 bg-zinc-900/60 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                                <i class="fas fa-camera text-white text-xs"></i>
+                            </div>
+                        </label>
+                        <input type="file" id="avatarUpload" accept="image/*" class="hidden">
+                    </div>
+                    <div class="overflow-hidden">
+                        <p class="text-sm font-bold text-zinc-900 truncate" id="sidebarUserName">Loading...</p>
+                        <p class="text-xs font-semibold text-brand-600 bg-brand-50 inline-block px-2 py-0.5 rounded-md mt-0.5">Pro Member</p>
+                    </div>
+                </div>
+            </div>
+
+            <nav class="px-4 space-y-2">
                 <a href="dashboard.html" class="flex items-center gap-4 px-4 py-3.5 bg-brand-50 text-brand-600 rounded-2xl font-bold transition-all border border-brand-100/50 shadow-sm">
                     <i class="fas fa-border-all w-5 text-lg"></i> Dashboard
                 </a>
@@ -81,8 +99,8 @@
                     <i class="fas fa-bars"></i>
                 </button>
                 <div>
-                    <h1 class="text-2xl font-extrabold text-zinc-900 tracking-tight">Overview</h1>
-                    <p class="text-sm text-zinc-500 font-medium mt-0.5" id="welcomeMessage">Here's your financial summary.</p>
+                    <h1 class="text-2xl font-extrabold text-zinc-900 tracking-tight" id="welcomeMessage">Welcome, <span class="font-extrabold text-brand-600">User</span></h1>
+                    <p class="text-sm text-zinc-500 font-medium mt-0.5">Here's your financial summary.</p>
                 </div>
             </div>
             
@@ -91,16 +109,6 @@
                     <i class="fas fa-bell text-lg"></i>
                     <span class="absolute top-3 right-3 w-2.5 h-2.5 bg-red-500 border-2 border-white rounded-full"></span>
                 </button>
-                
-                <div class="relative group w-12 h-12 rounded-full bg-brand-100 border-2 border-white shadow-md cursor-pointer overflow-hidden hidden sm:block">
-                    <label for="avatarUpload" class="cursor-pointer w-full h-full block">
-                        <img id="userAvatar" src="https://ui-avatars.com/api/?name=User&background=10b981&color=fff" alt="Avatar" class="w-full h-full object-cover transition duration-300">
-                        <div class="absolute inset-0 bg-zinc-900/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                            <i class="fas fa-camera text-white text-sm"></i>
-                        </div>
-                    </label>
-                    <input type="file" id="avatarUpload" accept="image/*" class="hidden">
-                </div>
             </div>
         </header>
 
@@ -116,9 +124,9 @@
                         <div class="w-14 h-14 bg-white/10 rounded-2xl flex items-center justify-center text-white backdrop-blur-md border border-white/10 shadow-inner">
                             <i class="fas fa-wallet text-2xl"></i>
                         </div>
-                        <span class="bg-white/10 backdrop-blur-md text-white border border-white/10 text-xs font-bold px-3 py-1.5 rounded-full uppercase tracking-wider">Net Worth</span>
+                        <span class="bg-white/10 backdrop-blur-md text-white border border-white/10 text-xs font-bold px-3 py-1.5 rounded-full uppercase tracking-wider">NET WORTH</span>
                     </div>
-                    <p class="text-brand-100/80 text-sm font-semibold mb-2 relative z-10 tracking-wide uppercase">Total Balance</p>
+                    <p class="text-brand-100/80 text-sm font-semibold mb-2 relative z-10 tracking-wide uppercase">TOTAL BALANCE</p>
                     <h2 class="text-4xl font-extrabold text-white tracking-tight relative z-10" id="totalBalance">₦0.00</h2>
                 </div>
 
@@ -128,7 +136,7 @@
                             <i class="fas fa-arrow-trend-up text-2xl"></i>
                         </div>
                     </div>
-                    <p class="text-zinc-400 text-sm font-semibold mb-2 tracking-wide uppercase">Total Income</p>
+                    <p class="text-zinc-400 text-sm font-semibold mb-2 tracking-wide uppercase">TOTAL INCOME</p>
                     <h2 class="text-3xl font-extrabold text-zinc-900 tracking-tight" id="totalIncome">₦0.00</h2>
                 </div>
 
@@ -138,41 +146,35 @@
                             <i class="fas fa-receipt text-2xl"></i>
                         </div>
                     </div>
-                    <p class="text-zinc-400 text-sm font-semibold mb-2 tracking-wide uppercase">Total Expenses</p>
+                    <p class="text-zinc-400 text-sm font-semibold mb-2 tracking-wide uppercase">TOTAL EXPENSES</p>
                     <h2 class="text-3xl font-extrabold text-zinc-900 tracking-tight" id="totalExpenses">₦0.00</h2>
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
-                
-                <div class="bg-white rounded-3xl border border-zinc-100 shadow-xl shadow-zinc-200/40 p-8 lg:col-span-2">
-                    <div class="flex items-center justify-between mb-8">
-                        <div>
-                            <h3 class="font-extrabold text-zinc-900 text-xl">Expense Analytics</h3>
-                            <p class="text-sm text-zinc-500 font-medium mt-1">Your spending over time</p>
-                        </div>
-                        <select class="bg-zinc-50 border border-zinc-200 text-sm rounded-xl px-4 py-2 outline-none focus:border-brand-500 text-zinc-700 font-semibold cursor-pointer transition">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div class="bg-surface rounded-2xl border border-zinc-200 shadow-sm p-6 lg:col-span-2">
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="font-bold text-zinc-900 text-lg">Expense Analytics</h3>
+                        <select class="bg-zinc-50 border border-zinc-200 text-sm rounded-lg px-3 py-1.5 outline-none focus:border-brand-500 text-zinc-600 font-medium">
                             <option>This Month</option>
                             <option>Last Month</option>
                             <option>All Time</option>
                         </select>
                     </div>
-                    <div class="relative h-72 w-full flex items-center justify-center bg-zinc-50/50 rounded-2xl border border-dashed border-zinc-200">
-                        <canvas id="expenseChart" class="hidden"></canvas>
-                        <p class="text-zinc-400 font-medium text-sm">Chart will render here</p>
+                    <div class="relative h-64 w-full flex items-center justify-center">
+                        <canvas id="expenseChart"></canvas>
+                        <p class="text-zinc-400 font-medium text-sm hidden" id="chartPlaceholder">Not enough data for chart</p>
                     </div>
                 </div>
 
-                <div class="bg-white rounded-3xl border border-zinc-100 shadow-xl shadow-zinc-200/40 flex flex-col h-full overflow-hidden">
-                    <div class="p-8 pb-4 border-b border-zinc-100/50 flex items-center justify-between">
-                        <h3 class="font-extrabold text-zinc-900 text-xl">Recent</h3>
-                        <a href="expenses.html" class="text-sm font-bold text-brand-600 hover:text-brand-700 bg-brand-50 px-3 py-1.5 rounded-lg transition">View All</a>
+                <div class="bg-surface rounded-2xl border border-zinc-200 shadow-sm flex flex-col h-full">
+                    <div class="p-6 border-b border-zinc-100 flex items-center justify-between">
+                        <h3 class="font-bold text-zinc-900 text-lg">Recent</h3>
+                        <a href="expenses.html" class="text-sm font-semibold text-brand-600 hover:text-brand-700">View All</a>
                     </div>
-                    
-                    <div class="p-6 flex-1 overflow-y-auto space-y-4" id="recentTransactions">
-                        <div class="flex flex-col items-center justify-center h-full text-zinc-400 space-y-3">
-                            <div class="w-10 h-10 border-4 border-brand-100 border-t-brand-500 rounded-full animate-spin"></div>
-                            <span class="text-sm font-semibold">Syncing data...</span>
+                    <div class="p-4 flex-1 overflow-y-auto space-y-2" id="recentTransactions">
+                        <div class="flex items-center justify-center h-full text-zinc-400 text-sm font-medium">
+                            <i class="fas fa-spinner fa-spin mr-2"></i> Syncing data...
                         </div>
                     </div>
                 </div>
