@@ -4,7 +4,7 @@ import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/
 import { collection, addDoc, getDocs, query, where, orderBy, deleteDoc, doc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 import { uploadImageToImgBB } from './imgbb.js';
 
-// DOM Elements matching your expenses.html
+// DOM Elements mapping to your UI
 const expenseForm = document.getElementById('expenseForm');
 const expenseTableBody = document.getElementById('expenseTableBody');
 const saveExpenseBtn = document.getElementById('saveExpenseBtn');
@@ -15,26 +15,6 @@ let currentUser = null;
 
 // Formatter for Naira
 const formatNGN = (amount) => new Intl.NumberFormat('en-NG', { style: 'currency', currency: 'NGN' }).format(amount);
-
-// --------------------------------------------------------
-// THE POPUP FUNCTION (Toast Notification)
-// --------------------------------------------------------
-function showSuccessToast(message) {
-    const toast = document.createElement('div');
-    toast.className = "fixed bottom-10 right-10 bg-zinc-900 text-white px-6 py-4 rounded-xl shadow-2xl flex items-center gap-3 transform transition-all translate-y-20 opacity-0 z-[100] font-medium border border-zinc-700/50";
-    toast.innerHTML = `<i class="fas fa-check-circle text-brand-400 text-xl"></i> <span>${message}</span>`;
-    
-    document.body.appendChild(toast);
-    
-    // Slide up
-    setTimeout(() => { toast.classList.remove('translate-y-20', 'opacity-0'); }, 10);
-    
-    // Slide down and remove after 3 seconds
-    setTimeout(() => {
-        toast.classList.add('translate-y-20', 'opacity-0');
-        setTimeout(() => toast.remove(), 300); 
-    }, 3000);
-}
 
 // 1. Authenticate User
 onAuthStateChanged(auth, (user) => {
@@ -69,7 +49,7 @@ async function loadExpenses() {
         if (querySnapshot.empty) {
             expenseTableBody.innerHTML = `
                 <tr>
-                    <td colspan="5" class="p-8 text-center text-zinc-400 font-medium">No expenses recorded yet.</td>
+                    <td colspan="5" class="p-8 text-center text-zinc-400">No expenses recorded yet.</td>
                 </tr>`;
             return;
         }
@@ -77,30 +57,27 @@ async function loadExpenses() {
         querySnapshot.forEach((doc) => {
             const data = doc.data();
             const tr = document.createElement('tr');
-            tr.className = "hover:bg-zinc-50/50 transition-colors group cursor-default";
+            tr.className = "hover:bg-zinc-50/50 transition-colors";
             
-            // Generate Badge styling based on your form categories
+            // Generate Badge styling
             let badgeClass = "bg-zinc-100 text-zinc-700";
             if(data.category === "Food & Dining") badgeClass = "bg-orange-100 text-orange-700";
             if(data.category === "Transportation") badgeClass = "bg-blue-100 text-blue-700";
             if(data.category === "Utilities") badgeClass = "bg-purple-100 text-purple-700";
-            if(data.category === "Technology & Software") badgeClass = "bg-indigo-100 text-indigo-700";
-            if(data.category === "Rent & Housing") badgeClass = "bg-rose-100 text-rose-700";
 
-            // Receipt Icon
             const receiptHTML = data.receiptUrl 
-                ? `<a href="${data.receiptUrl}" target="_blank" class="text-brand-500 hover:text-brand-700 ml-2" title="View Receipt"><i class="fas fa-image"></i></a>` 
+                ? `<a href="${data.receiptUrl}" target="_blank" class="text-brand-500 hover:text-brand-700 ml-2"><i class="fas fa-image"></i></a>` 
                 : '';
 
             tr.innerHTML = `
-                <td class="p-4 px-6 text-zinc-500 font-medium whitespace-nowrap">${data.date}</td>
-                <td class="p-4 px-6 font-bold text-zinc-800">${data.description} ${receiptHTML}</td>
-                <td class="p-4 px-6">
-                    <span class="${badgeClass} text-xs font-bold px-3 py-1.5 rounded-lg tracking-wide">${data.category}</span>
+                <td class="p-4 text-zinc-500 font-medium whitespace-nowrap">${data.date}</td>
+                <td class="p-4 font-semibold text-zinc-800">${data.description} ${receiptHTML}</td>
+                <td class="p-4">
+                    <span class="${badgeClass} text-xs font-bold px-3 py-1 rounded-full">${data.category}</span>
                 </td>
-                <td class="p-4 px-6 text-right font-extrabold text-zinc-900">${formatNGN(data.amount)}</td>
-                <td class="p-4 px-6 text-center">
-                    <button class="delete-btn text-zinc-300 hover:text-red-500 transition-colors p-2 rounded-lg hover:bg-red-50 opacity-0 group-hover:opacity-100 focus:opacity-100" data-id="${doc.id}">
+                <td class="p-4 text-right font-extrabold text-zinc-900">${formatNGN(data.amount)}</td>
+                <td class="p-4 text-center">
+                    <button class="delete-btn text-zinc-400 hover:text-red-500 transition-colors p-2" data-id="${doc.id}">
                         <i class="fas fa-trash-alt"></i>
                     </button>
                 </td>
@@ -123,7 +100,7 @@ expenseForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     
     const originalBtnText = saveExpenseBtn.innerHTML;
-    saveExpenseBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Saving...';
+    saveExpenseBtn.innerHTML = 'Saving...';
     saveExpenseBtn.disabled = true;
 
     try {
@@ -133,10 +110,9 @@ expenseForm.addEventListener('submit', async (e) => {
         const category = document.getElementById('expCategory').value;
         const receiptFile = document.getElementById('expReceipt').files[0];
 
-        // Upload to ImgBB
+        // Call the imported ImgBB function
         const receiptUrl = await uploadImageToImgBB(receiptFile);
 
-        // Save to Firestore
         await addDoc(collection(db, "transactions"), {
             userId: currentUser.uid,
             type: "expense",
@@ -144,22 +120,19 @@ expenseForm.addEventListener('submit', async (e) => {
             amount: amount,
             category: category,
             date: date,
-            receiptUrl: receiptUrl || null,
+            receiptUrl: receiptUrl,
             createdAt: serverTimestamp()
         });
 
         expenseForm.reset();
         document.getElementById('expDate').valueAsDate = new Date();
         
-        // Close modal
+        // Close modal automatically if toggleExpenseModal is globally available
         if (typeof window.toggleExpenseModal === 'function') {
             window.toggleExpenseModal();
         }
         
         loadExpenses();
-        
-        // Trigger Popup
-        showSuccessToast("Expense saved successfully!");
 
     } catch (error) {
         console.error("Error adding expense:", error);
@@ -179,9 +152,6 @@ async function handleDelete(e) {
         try {
             btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
             await deleteDoc(doc(db, "transactions", docId));
-            
-            // Trigger Popup
-            showSuccessToast("Expense deleted.");
             loadExpenses();
         } catch (error) {
             console.error("Error deleting:", error);
