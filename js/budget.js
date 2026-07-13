@@ -1,7 +1,7 @@
 // js/budget.js
 import { auth, db } from './firebase.js';
 import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-import { collection, addDoc, getDocs, query, where, deleteDoc, doc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+import { collection, addDoc, getDocs, query, where, deleteDoc, doc, serverTimestamp, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
 // DOM Elements
 const budgetContainer = document.getElementById('budgetContainer');
@@ -48,12 +48,9 @@ onAuthStateChanged(auth, (user) => {
 // 2. Fetch and Render Budgets
 async function loadBudgets() {
     try {
-        // Step A: Fetch Budgets for this user
         const budgetsQuery = query(collection(db, "budgets"), where("userId", "==", currentUser.uid));
         const budgetSnapshot = await getDocs(budgetsQuery);
         
-        // Step B: Fetch ALL expenses for this user (to calculate how much is spent)
-        // Note: Filtering by month happens in JS to avoid complex Firestore indexes
         const txnQuery = query(collection(db, "transactions"), where("userId", "==", currentUser.uid), where("type", "==", "expense"));
         const txnSnapshot = await getDocs(txnQuery);
         
@@ -69,7 +66,7 @@ async function loadBudgets() {
             }
         });
 
-        budgetContainer.innerHTML = ''; // Clear loading state
+        budgetContainer.innerHTML = ''; 
 
         if (budgetSnapshot.empty) {
             budgetContainer.innerHTML = `
@@ -84,23 +81,20 @@ async function loadBudgets() {
             return;
         }
 
-        // Render Cards
         budgetSnapshot.forEach((doc) => {
             const budgetData = doc.data();
             
-            // Calculate total spent for this specific category
             const totalSpent = expensesThisMonth
                 .filter(txn => txn.category === budgetData.category)
                 .reduce((sum, txn) => sum + txn.amount, 0);
 
             const limit = budgetData.limit;
             let percentage = (totalSpent / limit) * 100;
-            if (percentage > 100) percentage = 100; // Cap visual bar at 100%
+            if (percentage > 100) percentage = 100;
 
-            // Determine Progress Bar Color
-            let barColor = "bg-brand-500"; // Safe (Green)
-            if (percentage >= 80) barColor = "bg-red-500"; // Danger (Red)
-            else if (percentage >= 50) barColor = "bg-amber-400"; // Warning (Yellow)
+            let barColor = "bg-brand-500"; 
+            if (percentage >= 80) barColor = "bg-red-500"; 
+            else if (percentage >= 50) barColor = "bg-amber-400"; 
 
             const remaining = limit - totalSpent;
             const remainingText = remaining >= 0 ? `${formatNGN(remaining)} remaining` : `${formatNGN(Math.abs(remaining))} over budget`;
@@ -138,7 +132,6 @@ async function loadBudgets() {
             budgetContainer.innerHTML += cardHTML;
         });
 
-        // Attach delete listeners
         document.querySelectorAll('.delete-btn').forEach(btn => {
             btn.addEventListener('click', handleDelete);
         });
@@ -149,19 +142,51 @@ async function loadBudgets() {
     }
 }
 
-// 3. Handle Form Submission
+// 3. Handle Form Submission & 30-Day Paywall Logic
 budgetForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     
     const originalBtnText = saveBudgetBtn.innerHTML;
-    saveBudgetBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Saving...';
+    saveBudgetBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Verifying...';
     saveBudgetBtn.disabled = true;
 
     try {
+        // Step 1: Check Pro Subscription Status
+        const userDocRef = doc(db, "users", currentUser.uid);
+        const userDocSnap = await getDoc(userDocRef);
+        const userData = userDocSnap.exists() ? userDocSnap.data() : {};
+        
+        const isPro = userData.isPro || false;
+        const expiresAt = userData.proExpiresAt ? userData.proExpiresAt.toDate() : null;
+        const now = new Date();
+        
+        // Active Pro user ONLY if isPro is true AND expiry date has not passed
+        const hasValidPro = isPro && expiresAt && now <= expiresAt;
+
+        // Step 2: Check current budget count
+        const budgetsQuery = query(collection(db, "budgets"), where("userId", "==", currentUser.uid));
+        const budgetSnapshot = await getDocs(budgetsQuery);
+
+        // Step 3: Trigger Paywall if needed
+        if (!hasValidPro && budgetSnapshot.size >= 2) {
+            if (typeof window.toggleBudgetModal === 'function') window.toggleBudgetModal();
+            
+            if (isPro && expiresAt && now > expiresAt) {
+                alert("Your Pro subscription has expired! Free accounts are limited to 2 active budgets. Please renew to add more limits.");
+            } else {
+                alert("Free accounts are limited to 2 active budgets. Upgrade to Pro to unlock unlimited tracking!");
+            }
+            
+            window.location.href = "upgrade.html";
+            return;
+        }
+
+        // Proceed with Saving the Budget
+        saveBudgetBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Saving...';
+        
         const category = document.getElementById('budgetCategory').value;
         const limit = parseFloat(document.getElementById('budgetLimit').value);
 
-        // Save to 'budgets' collection
         await addDoc(collection(db, "budgets"), {
             userId: currentUser.uid,
             category: category,
