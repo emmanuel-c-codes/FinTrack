@@ -13,10 +13,10 @@ onAuthStateChanged(auth, (user) => {
         
         // Update Navbar
         authNavContainer.innerHTML = `
-            <a href="dashboard.html" class="bg-brand-50 text-brand-600 font-bold px-5 py-2.5 rounded-xl hover:bg-brand-100 transition shadow-sm border border-brand-100/50 flex items-center gap-2">
-                Go to Dashboard <i class="fas fa-arrow-right text-sm"></i>
-            </a>
-        `;
+    <a href="dashboard.html" class="bg-brand-50 text-brand-600 text-xs sm:text-sm font-bold px-3 py-2 sm:px-5 sm:py-2.5 rounded-xl border border-brand-100 flex items-center gap-2 whitespace-nowrap">
+        Go to Dashboard <i class="fas fa-arrow-right hidden sm:inline"></i>
+    </a>
+`;
         
         // Update Hero CTA
         heroCtaContainer.innerHTML = `
